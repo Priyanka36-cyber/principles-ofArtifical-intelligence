@@ -1,0 +1,34 @@
+AIM:
+Shortest path using A* (A-star) in a grid.
+
+CODE:
+import heapq
+
+def astar(grid, start, goal):
+    h = lambda a, b: abs(a[0]-b[0]) + abs(a[1]-b[1])
+    open = [(0 + h(start, goal), 0, start, [])]
+    seen = set()
+    while open:
+        _, g, curr, path = heapq.heappop(open)
+        if curr in seen: continue
+        path = path + [curr]
+        if curr == goal: return path
+        seen.add(curr)
+        for dx, dy in [(-1,0),(1,0),(0,-1),(0,1)]:
+            nx, ny = curr[0]+dx, curr[1]+dy
+            if 0<=nx<len(grid) and 0<=ny<len(grid[0]) and grid[nx][ny]==0:
+                heapq.heappush(open, (g+1+h((nx,ny), goal), g+1, (nx,ny), path))
+
+grid = [
+    [0,1,0],
+    [0,0,0],
+    [1,0,0]
+]
+print("Path:", astar(grid, (0,0), (2,2)))
+
+
+OUTPUT:
+Path: [(0, 0), (1, 0), (1, 1), (1, 2), (2, 2)]
+
+RESULT:
+A* found the shortest path from (0,0) to (2,2) through free cells.
